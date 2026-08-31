@@ -14,12 +14,52 @@ testsInvertido = TestList -- TODO: AGREGAR
   , "Caja invertida (3)"
     ~: invertido cajaNada
     ~?= cajaNada
+  , "Caja invertida (4)"
+    ~: invertido (Serie
+      (Paralelo
+        on
+        (Paralelo off cajaNada cajaOn on)
+        (Paralelo Nada cajaOn cajaOff Nada)
+        on
+      )
+      cajaOn
+    )
+    ~?= Serie
+      cajaOn
+      (Paralelo
+        on
+        (Paralelo Nada cajaOff cajaOn Nada)
+        (Paralelo on cajaOn cajaNada off)
+        on
+      )
   ]
 
 testsHayCaminoIluminado :: Test
 testsHayCaminoIluminado = TestList -- TODO: AGREGAR
   [ "En una caja con bombilla encendida hay camino iluminado"
     ~: hayCaminoIluminado cajaOn
+    ~?= True
+  , "Hay Camino Iluminado (2)"
+    ~: hayCaminoIluminado (Serie
+      (Paralelo
+        on
+        (Paralelo off cajaNada cajaOn on)
+        (Paralelo Nada cajaOn cajaOff Nada)
+        on
+      )
+      cajaOn
+    )
+    ~?= False
+    , "Hay Camino Iluminado (3)"
+    ~: hayCaminoIluminado (Serie
+      (Paralelo
+        on
+        (Paralelo on cajaNada cajaOn on)
+        (Paralelo Nada cajaOn cajaOff Nada)
+        on
+      )
+      cajaOn
+    )
     ~?= True
   ]
 
@@ -28,6 +68,17 @@ testsCantidadPrendidas = TestList -- TODO: AGREGAR
   [ "Cantidad prendidas en caja prendida es 1"
     ~: cantidadPrendidas cajaOn
     ~?= 1
+  , "Cantidad Prendidas (2)"
+    ~: cantidadPrendidas (Serie
+      (Paralelo
+        on
+        (Paralelo off cajaNada cajaOn on)
+        (Paralelo Nada cajaOn cajaOff Nada)
+        on
+      )
+      cajaOn
+    )
+    ~?= 6
   ]
 
 testsCajasDeCircuito :: Test
@@ -35,6 +86,17 @@ testsCajasDeCircuito = TestList -- TODO: AGREGAR
   [ "La lista de cajas de un circuito con una única caja es la lista con esa caja"
     ~: cajasDeCircuito cajaOn
     ~?= [on]
+  , "Cajas de Circuito (2)"
+    ~: cajasDeCircuito (Serie
+      (Paralelo
+        on
+        (Paralelo off cajaNada cajaOn on)
+        (Paralelo Nada cajaOn cajaOff Nada)
+        on
+      )
+      cajaOn
+    )
+    ~?= [on, off, Nada, on, on, Nada, on, off, Nada, on, on]
   ]
 
 testsEsCircuitoProlijo :: Test
@@ -42,6 +104,12 @@ testsEsCircuitoProlijo = TestList -- TODO: AGREGAR
   [ "Una caja es prolija"
     ~: esCircuitoProlijo cajaOn
     ~?= True
+  , "Es Circuito Prolijo (2)"
+    ~: esCircuitoProlijo (Serie (Serie cajaOn cajaOn) cajaOff)
+    ~?= True
+  , "Es Circuito Prolijo (3)"
+    ~: esCircuitoProlijo (Serie cajaOn (Serie cajaOn cajaOff))
+    ~?= False
   ]
 
 -- NOTA: para correr este test, cambiar la línea 18 del archivo tp1.hs de "show = showDeCircuito" a
@@ -52,11 +120,17 @@ testsCircuitoEmprolijado = TestList -- TODO: AGREGAR
   [ "La versión emprolijada de una caja es la misma caja"
     ~: circuitoEmprolijado cajaOn
     ~?= cajaOn
+  , "Circuito Emprolijado (2)"
+    ~: circuitoEmprolijado (Serie (Serie cajaOn cajaOn) cajaOff)
+    ~?= Serie (Serie cajaOn cajaOn) cajaOff
+  , "Circuito Emprolijado (3)"
+    ~: circuitoEmprolijado (Serie cajaOn (Serie cajaOff cajaOn))
+    ~?= Serie (Serie cajaOn cajaOff) cajaOn
   ]
 
 testsTienenLaMismaEstructura :: Test
 testsTienenLaMismaEstructura = TestList
-  [ "Test tienenLaMismaEstructura (1)"
+  [ "Test Tienen La Misma Estructura (1)"
     ~: tienenLaMismaEstructura
       (Serie
         cajaOn
@@ -77,7 +151,7 @@ testsTienenLaMismaEstructura = TestList
         )
       )
     ~?= True
-  , "Test tienenLaMismaEstructura (2)"
+  , "Test Tienen La Misma Estructura (2)"
     ~: tienenLaMismaEstructura
       (Serie
         cajaOn
