@@ -148,7 +148,6 @@ resistenciaCircuito circ = 1
 subCircuitoMásResistente:: Circuito -> Circuito
 subCircuitoMásResistente = recCircuito
   Caja
-  --(\caja -> if resistenciaCircuito (Caja caja) > (resistenciaCircuito cajaNada) then Caja caja else cajaNada)
   (\circ1 circ2 recCirc1 recCirc2 -> if resistenciaCircuito recCirc1 > resistenciaCircuito recCirc2
     then if resistenciaCircuito (Serie circ1 circ2) > resistenciaCircuito recCirc1
       then Serie circ1 circ2
@@ -188,6 +187,73 @@ not :: Bool -> Bool
 {NT} not True = False
 {NF} not False = True
 
--- TODO: COMPLETAR
 
+
+Por Principio de Extensionalidad Funcional, basta probar que
+    (∀ circ:: Circuito) alternado . alternado circ = id circ
+
+Por Principio de Inducción sobre Circuitos, basta probar los siguientes casos:
+  P(circ): alternado . alternado circ = id circ
+
+    1) Caso Base: Debo probar que (∀ caja:: Caja) P(Caja caja)
+      alternado . alternado (Caja caja)
+      = alterando (alternado (Caja caja))         {C}
+      = alternado (Caja (cajaAlternada caja))     {AC}
+      = Caja (cajaAlternada (cajaAlternada caja)) {AC}
+      = Caja caja                                 {LEMA}
+      = id (Caja caja)                            {I}
+
+    2) Paso Inductivo Serie: Debo probar que (∀ circ1:: Circuito) (∀ circ2:: Circuito) ((P(circ1) ∧ P(circ2)) → P(Serie circ1 circ2))
+      alternado . alternado (Serie circ1 circ2)
+      = alternado (alternado (Serie circ1 circ2))                         {C}
+      = alternado (Serie (alternado circ1) (alternado circ2))             {AS}
+      = Serie (alternado (alternado circ1)) (alternado (alternado circ2)) {AS}
+      = Serie (alternado . alternado circ1) (alternado . alternado circ2) {C}
+      = Serie (id circ1) (id circ2)                                       {HI}
+      = Serie circ1 circ2                                                 {I}
+      = id (Serie circ1 circ2)                                            {I}
+    
+    3) Paso Inductivo Paralelo: Debo probar que (∀ caja1:: Caja) (∀ circ1:: Circuito) (∀ circ2:: Circuito) (∀ caja2:: Caja) ((P(circ1) ∧ P(circ2)) → P(Paralelo caja1 circ1 circ2 caja2))
+      alternado . alternado (Paralelo caja1 circ1 circ2 caja2)
+      = alternado (alternado (Paralelo caja1 circ1 circ2 caja2))                                                                                          {C}
+      = alternado (Paralelo (cajaAlternada caja1) (alternado circ1) (alternado circ2) (cajaAlternada caja2))                                              {AP}
+      = Paralelo (cajaAlternada (cajaAlternada caja1)) (alternado (alternado circ1)) (alternado (alternado circ2)) (cajaAlternada (cajaAlternada caja2))  {AP}
+      = Paralelo caja1 (alternado (alternado circ1)) (alternado (alternado circ2)) caja2                                                                  {LEMA}
+      = Paralelo caja1 (alternado . alternado circ1) (alternado . alternado circ2) caja2                                                                  {C}
+      = Paralelo caja1 (id circ1) (id circ2) caja2                                                                                                        {HI}
+      = Paralelo caja1 circ1 circ2 caja2                                                                                                                  {I}
+      = id (Paralelo caja1 circ1 circ2 caja2)                                                                                                             {I}
+
+Luego alternado . alternado = id
+
+
+- Prueba de LEMA: Debo probar que
+  (∀ caja:: Caja) (cajaAlternada (cajaAlternada caja)) = caja
+
+  Por Lema de Generación de Cajas, si caja:: Caja entonces
+    1) O bien caja = Nada
+    2) O bien caja = Bombilla True (por Lema de Generación de Booleanos)
+    3) O bien caja = Bombilla False (por Lema de Generación de Booleanos)
+
+  Luego, para probar LEMA basta con demostrar cada caso:
+    1) Caso caja = Nada:
+      cajaAlternada (cajaAlternada Nada)
+      = cajaAlternada Nada  {CAN}
+      = Nada                {CAN}
+
+    2) Caso caja = Bombilla True:
+      = cajaAlternada (cajaAlternada (Bombilla True))
+      = cajaAlternada (Bombilla (not True)) {CAB}
+      = cajaAlternada (Bombilla False)      {NT}
+      = Bombilla (not False)                {CAB}
+      = Bombilla True                       {NF}
+
+    3) Caso caja = Bombilla False:
+      = cajaAlternada (cajaAlternada (Bombilla False))
+      = cajaAlternada (Bombilla (not False))  {CAB}
+      = cajaAlternada (Bombilla True)         {NF}
+      = Bombilla (not True)                   {CAB}
+      = Bombilla False                        {NT}
+
+Luego (∀ caja:: Caja) (cajaAlternada (cajaAlternada caja)) = caja
 --}
