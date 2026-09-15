@@ -61,6 +61,12 @@ testsHayCaminoIluminado = TestList -- TODO: AGREGAR
       cajaOn
     )
     ~?= True
+    , "Hay Camino Iluminado (4)"
+    ~: hayCaminoIluminado (Serie
+      cajaOn
+      cajaOn
+    )
+    ~?= True
   ]
 
 testsCantidadPrendidas :: Test
@@ -79,6 +85,23 @@ testsCantidadPrendidas = TestList -- TODO: AGREGAR
       cajaOn
     )
     ~?= 6
+  , "Cantidad Prendidas (3)"
+     ~: cantidadPrendidas (Serie
+     cajaOff
+     cajaOff
+     )
+     ~?= 0
+  , "Cantidad Prendidas (4)"
+    ~: cantidadPrendidas (Serie
+      (Paralelo
+        on
+        (Paralelo on cajaOn cajaOn on)
+        (Paralelo on cajaOn cajaOn on)
+        on
+      )
+      cajaOn
+    )
+    ~?= 11
   ]
 
 testsCajasDeCircuito :: Test
@@ -97,6 +120,23 @@ testsCajasDeCircuito = TestList -- TODO: AGREGAR
       cajaOn
     )
     ~?= [on, off, Nada, on, on, Nada, on, off, Nada, on, on]
+  , "Cajas de Circuito (3)"
+    ~: cajasDeCircuito (Serie
+      (Paralelo
+        on
+        cajaOff
+        cajaOn
+        on
+      )
+        cajaOn
+      )
+    ~?= [on, off, on, on, on]
+    , "Cajas de Circuito (4)"
+    ~: cajasDeCircuito (Serie
+        cajaNada
+        cajaNada
+      )
+    ~?= [Nada, Nada]
   ]
 
 testsEsCircuitoProlijo :: Test
@@ -172,6 +212,15 @@ testsTienenLaMismaEstructura = TestList
         )
       )
     ~?= False
+    , "Test Tienen La Misma Estructura (3)"
+    ~: tienenLaMismaEstructura
+      (Caja 
+        on
+      )
+      (Caja
+        off
+      )
+    ~?= True
   ]
 
 testsSubCircuitoMásResistente :: Test
