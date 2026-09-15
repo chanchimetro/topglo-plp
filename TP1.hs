@@ -143,7 +143,10 @@ tienenLaMismaEstructura = foldCircuito
 -- 10: subCircuitoMásResistente
 
 resistenciaCircuito:: Circuito -> Float
-resistenciaCircuito circ = 1
+resistenciaCircuito = foldCircuito
+  (\_ -> 1.0) 
+  (+)
+  (\rCajaE rC1 rC2 rCajaS -> rCajaE + ((rC1 * rC2) / (rC1 + rC2)) + rCajaS)
 
 subCircuitoMásResistente:: Circuito -> Circuito
 subCircuitoMásResistente = recCircuito
