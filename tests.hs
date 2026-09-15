@@ -5,7 +5,7 @@ import Test.HUnit
 
 testsInvertido :: Test
 testsInvertido =
-  TestList -- TODO: AGREGAR
+  TestList
     [ "Caja invertida (1)"
         ~: invertido cajaOn
         ~?= cajaOn,
@@ -38,7 +38,7 @@ testsInvertido =
 
 testsHayCaminoIluminado :: Test
 testsHayCaminoIluminado =
-  TestList -- TODO: AGREGAR
+  TestList
     [ "En una caja con bombilla encendida hay camino iluminado"
         ~: hayCaminoIluminado cajaOn
         ~?= True,
@@ -77,7 +77,7 @@ testsHayCaminoIluminado =
 
 testsCantidadPrendidas :: Test
 testsCantidadPrendidas =
-  TestList -- TODO: AGREGAR
+  TestList
     [ "Cantidad prendidas en caja prendida es 1"
         ~: cantidadPrendidas cajaOn
         ~?= 1,
@@ -116,7 +116,7 @@ testsCantidadPrendidas =
 
 testsCajasDeCircuito :: Test
 testsCajasDeCircuito =
-  TestList -- TODO: AGREGAR
+  TestList
     [ "La lista de cajas de un circuito con una única caja es la lista con esa caja"
         ~: cajasDeCircuito cajaOn
         ~?= [on],
@@ -155,7 +155,7 @@ testsCajasDeCircuito =
 
 testsEsCircuitoProlijo :: Test
 testsEsCircuitoProlijo =
-  TestList -- TODO: AGREGAR
+  TestList
     [ "Una caja es prolija"
         ~: esCircuitoProlijo cajaOn
         ~?= True,
@@ -172,7 +172,7 @@ testsEsCircuitoProlijo =
 -- De esa forma, podrán distinguir la estructura de los circuitos en serie.
 testsCircuitoEmprolijado :: Test
 testsCircuitoEmprolijado =
-  TestList -- TODO: AGREGAR
+  TestList
     [ "La versión emprolijada de una caja es la misma caja"
         ~: circuitoEmprolijado cajaOn
         ~?= cajaOn,
